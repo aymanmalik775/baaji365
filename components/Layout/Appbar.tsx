@@ -55,6 +55,7 @@ export default function Appbar() {
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Link href="/">
             <Image
+              style={{ cursor: 'pointer' }}
               src="/logo.png"
               alt="baaji365-logo"
               width={120}
