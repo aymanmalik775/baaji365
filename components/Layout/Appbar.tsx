@@ -7,7 +7,6 @@ import {
   Stack,
   Collapse,
   Icon,
-  Link,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -22,6 +21,7 @@ import {
 } from '@chakra-ui/icons';
 import { primaryColor } from '../../pages';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Appbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -83,7 +83,7 @@ export default function Appbar() {
               bg: 'red.400'
             }}
           >
-            <Link href={'/dashboard'}>
+            <Link href="/dashboard">
               <a>ড্যাশবোর্ড</a>
             </Link>
           </Button>
@@ -99,25 +99,17 @@ export default function Appbar() {
 
 const DesktopNav = () => {
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-
   return (
     <Stack direction={'row'} spacing={4}>
       {NAV_ITEMS.map(navItem => (
         <Box key={navItem.label}>
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
-              <Link
-                p={2}
-                href={navItem.href ?? '#'}
-                fontSize={'sm'}
-                _hover={{
-                  textDecoration: 'none'
-                }}
-              >
-                <Button colorScheme={'blackAlpha'} variant="solid">
-                  {navItem.label}
-                </Button>
-              </Link>
+              <Button colorScheme={'blackAlpha'} variant="solid">
+                <Link href={navItem.href ?? '#'}>
+                  <a>{navItem.label}</a>
+                </Link>
+              </Button>
             </PopoverTrigger>
 
             {navItem.children && (
@@ -145,38 +137,31 @@ const DesktopNav = () => {
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   return (
-    <Link
-      href={href}
-      role={'group'}
-      display={'block'}
-      p={2}
-      rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
-    >
-      <Stack direction={'row'} align={'center'}>
-        <Box>
-          <Text
-            transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
-            fontWeight={900}
-          >
-            {label}
-          </Text>
-          <Text fontSize={'sm'}>{subLabel}</Text>
-        </Box>
-        <Flex
+    <Stack direction={'row'} align={'center'}>
+      <Box>
+        <Text
           transition={'all .3s ease'}
-          transform={'translateX(-10px)'}
-          opacity={0}
-          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-          justify={'flex-end'}
-          align={'center'}
-          flex={1}
+          _groupHover={{ color: 'pink.400' }}
+          fontWeight={900}
         >
-          <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
-    </Link>
+          <Link href={href ?? '#'}>
+            <a>{label}</a>
+          </Link>
+        </Text>
+        <Text fontSize={'sm'}>{subLabel}</Text>
+      </Box>
+      <Flex
+        transition={'all .3s ease'}
+        transform={'translateX(-10px)'}
+        opacity={0}
+        _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
+        justify={'flex-end'}
+        align={'center'}
+        flex={1}
+      >
+        <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
+      </Flex>
+    </Stack>
   );
 };
 
@@ -201,8 +186,6 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
         py={2}
-        as={Link}
-        href={href ?? '#'}
         justify={'space-between'}
         align={'center'}
         _hover={{
@@ -213,7 +196,9 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           fontWeight={600}
           color={useColorModeValue('gray.600', 'gray.200')}
         >
-          {label}
+          <Link href={href ?? '#'}>
+            <a>{label}</a>
+          </Link>
         </Text>
         {children && (
           <Icon
@@ -235,11 +220,13 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           borderColor={useColorModeValue('gray.200', 'gray.700')}
           align={'start'}
         >
-          {children &&
+          {children?.length &&
             children.map(child => (
-              <Link key={child.label} py={2} href={child.href}>
-                {child.label}
-              </Link>
+              <Box key={child.label}>
+                <Link href={child.href ?? '#'}>
+                  <a>{child.label}</a>
+                </Link>
+              </Box>
             ))}
         </Stack>
       </Collapse>
