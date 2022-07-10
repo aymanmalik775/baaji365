@@ -1,11 +1,29 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
-import { AdminDataTable } from '../../components/UI/DataTable';
+import {
+  DataTableComponent,
+  UserType
+} from '../../components/UI/DataTableComponent';
+import useCreateUser from '../../hooks/query/useCreateUser';
+import useGetUsers from '../../hooks/query/useGetUsers';
 
 const SuperAgentList: NextPage = () => {
+  const { users, isGettingUsers } = useGetUsers();
+  const { createUser, isCreatingUser } = useCreateUser();
   return (
     <div>
-      <AdminDataTable />
+      <DataTableComponent
+        data={users}
+        isGettingUsers={isGettingUsers}
+        userType={UserType.Admin}
+        isCreatingUser={isCreatingUser}
+        isEditingUser={false}
+        isSuperPowerMode={true}
+        onAddUser={createUser}
+        onEditUser={user => {
+          console.log(user);
+        }}
+        onDeleteUser={user => {}}
+      />
     </div>
   );
 };

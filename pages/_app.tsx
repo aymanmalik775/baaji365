@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import { useEffect, useState } from 'react';
+import { QueryClientProvider } from 'react-query';
+import queryClient from '../react-query/queryClient';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
@@ -15,9 +17,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <QueryClientProvider client={queryClient}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </QueryClientProvider>
     </ChakraProvider>
   );
 }

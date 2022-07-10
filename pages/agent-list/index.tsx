@@ -1,8 +1,11 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
+import { UserType } from '../../components/UI/DataTableComponent';
+import { UserForm } from '../../components/UI/UserForm';
 
-const AgentList: NextPage = () => {
-  return <div>Agent List </div>;
-};
+const AgentList: NextPage = () => (
+  <div>
+    <UserForm userRole={UserType.SuperAgent} />
+  </div>
+);
 
 export default AgentList;
