@@ -74,6 +74,16 @@ export function UserForm({
     formMode === FormMode.Create ? onCreateUser(final) : onEditUser(final);
   };
 
+  // reset({
+  //   username: '',
+  //   role: userRole,
+  //   fbLink: '',
+  //   fbName: '',
+  //   whatsappNumber: '',
+  //   complainToUserIdLink: '',
+  //   complainToUserName: ''
+  // })
+
   useEffect(() => {
     if (defaultUser) {
       reset({
@@ -86,16 +96,7 @@ export function UserForm({
         complainToUserName: defaultUser?.complainToUserName
       });
       onOpen();
-    } else
-      reset({
-        username: '',
-        role: userRole,
-        fbLink: '',
-        fbName: '',
-        whatsappNumber: '',
-        complainToUserIdLink: '',
-        complainToUserName: ''
-      });
+    } else reset({});
   }, [defaultUser, onOpen, reset, userRole]);
 
   return (
@@ -241,8 +242,8 @@ export function UserForm({
                     })}
                   />
                   <FormErrorMessage>
-                    {errors.complainToUserName &&
-                      errors.complainToUserName.message}
+                    {errors.complainToUserIdLink &&
+                      errors.complainToUserIdLink.message}
                   </FormErrorMessage>
                 </FormControl>
               </Stack>
