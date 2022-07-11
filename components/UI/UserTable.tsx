@@ -5,15 +5,15 @@ import {
   IconButton,
   Link,
   Spinner,
-  Text,
   useDisclosure
 } from '@chakra-ui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import useCreateUser from '../../hooks/query/useCreateUser';
 import useDeleteUser from '../../hooks/query/useDeleteUser';
 import useGetUsers from '../../hooks/query/useGetUsers';
 import useUpdateUser from '../../hooks/query/useUpdateUser';
+import AlertDialogComponent from './AlertDialogComponent';
 import { UserForm } from './UserForm';
 
 export type User = {
@@ -51,7 +51,9 @@ const getRenderedList = (label: string, link: string) => (
 
 export function UserTable({ userType, isSuperPowerMode = true }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const alertDialog = useDisclosure();
   const [userToEdit, setUserToEdit] = useState<User>();
+  const [userToDelete, setUserToDelete] = useState<User>();
   const { data: users, isLoading: isGettingUsers } = useGetUsers();
   const { isLoading: isCreatingUser, mutateAsync: createUser } =
     useCreateUser();
@@ -91,13 +93,12 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
         cell: user => (
           <>
             <IconButton
-              onClick={() => deleteUser(user)}
+              onClick={() => setUserToDelete(user)}
               margin={1}
               colorScheme="red"
               aria-label="Delete"
               size="sm"
               icon={<DeleteIcon />}
-              isLoading={isDeletingUser}
             />
             <IconButton
               onClick={() => setUserToEdit(user)}
@@ -112,7 +113,11 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
       });
     }
     return colsToRender;
-  }, [deleteUser, isSuperPowerMode]);
+  }, [isSuperPowerMode]);
+
+  useEffect(() => {
+    userToDelete ? alertDialog.onOpen() : alertDialog.onClose();
+  }, [alertDialog, alertDialog.onOpen, userToDelete]);
 
   const filteredData = useMemo(
     () => (users ?? []).filter(el => el.role === userType),
@@ -172,6 +177,16 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
         }}
         isSubmitting={isCreatingUser || isUpdatingUser}
         defaultUser={userToEdit}
+      />
+      <AlertDialogComponent
+        onClose={alertDialog.onClose}
+        isOpen={alertDialog.isOpen}
+        title={`Delete ${userToDelete?.role} "${userToDelete?.username}"}`}
+        onAgree={async () => {
+          setUserToDelete(undefined);
+          userToDelete && (await deleteUser(userToDelete));
+        }}
+        onReject={() => setUserToDelete(undefined)}
       />
     </>
   );
