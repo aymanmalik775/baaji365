@@ -5,7 +5,6 @@ import {
   IconButton,
   Link,
   Spinner,
-  Text,
   useDisclosure
 } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
@@ -52,7 +51,7 @@ const getRenderedList = (label: string, link: string) => (
 export function UserTable({ userType, isSuperPowerMode = true }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userToEdit, setUserToEdit] = useState<User>();
-  const { data: users, isLoading: isGettingUsers } = useGetUsers(userType);
+  const { data: users, isLoading: isGettingUsers } = useGetUsers();
   const { isLoading: isCreatingUser, mutateAsync: createUser } =
     useCreateUser();
   const { mutateAsync: deleteUser, isLoading: isDeletingUser } =
@@ -91,9 +90,7 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
         cell: user => (
           <>
             <IconButton
-              onClick={() => {
-                deleteUser(user);
-              }}
+              onClick={() => deleteUser(user)}
               margin={1}
               colorScheme="red"
               aria-label="Delete"
@@ -114,6 +111,11 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
     }
     return colsToRender;
   }, [deleteUser, isSuperPowerMode]);
+
+  const filteredData = useMemo(
+    () => (users ?? []).filter(el => el.role === userType),
+    [userType, users]
+  );
 
   return (
     <>
@@ -137,7 +139,7 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
         <DataTable
           pagination
           columns={columns}
-          data={users ?? []}
+          data={filteredData}
           progressPending={isGettingUsers}
           progressComponent={
             <Spinner
@@ -158,12 +160,12 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
         }}
         onOpen={onOpen}
         userRole={userType}
-        onCreateUser={user => {
-          createUser(user);
+        onCreateUser={async user => {
+          await createUser(user);
           onClose();
         }}
-        onEditUser={user => {
-          userToEdit && updateUser({ ...user, _id: userToEdit._id });
+        onEditUser={async user => {
+          userToEdit && (await updateUser({ ...user, _id: userToEdit._id }));
           onClose();
         }}
         isSubmitting={isCreatingUser || isUpdatingUser}

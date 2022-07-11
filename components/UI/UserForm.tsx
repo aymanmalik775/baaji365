@@ -241,7 +241,8 @@ export function UserForm({
                     })}
                   />
                   <FormErrorMessage>
-                    {errors.username && errors.username.message}
+                    {errors.complainToUserName &&
+                      errors.complainToUserName.message}
                   </FormErrorMessage>
                 </FormControl>
               </Stack>

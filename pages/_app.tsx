@@ -4,6 +4,7 @@ import { ChakraProvider, ToastProvider } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import { useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import queryClient from '../react-query/queryClient';
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -23,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </Layout>
         </ToastProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraProvider>
   );

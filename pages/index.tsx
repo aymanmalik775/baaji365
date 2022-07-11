@@ -13,10 +13,17 @@ import {
   Flex
 } from '@chakra-ui/react';
 import Link from 'next/link';
-import Footer from '../components/Layout/Footer';
+import { usePrefetchUsers } from '../hooks/query/useGetUsers';
+import { useEffect } from 'react';
 export const primaryColor = '#2F855A';
 
 const Home: NextPage = () => {
+  const prefetch = usePrefetchUsers();
+
+  useEffect(() => {
+    prefetch();
+  }, [prefetch]);
+
   return (
     <>
       <Head>
