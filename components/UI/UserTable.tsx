@@ -96,6 +96,7 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
               aria-label="Delete"
               size="sm"
               icon={<DeleteIcon />}
+              isLoading={isDeletingUser}
             />
             <IconButton
               onClick={() => setUserToEdit(user)}
