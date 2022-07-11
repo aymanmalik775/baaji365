@@ -5,6 +5,7 @@ import {
   IconButton,
   Link,
   Spinner,
+  Text,
   useDisclosure
 } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
@@ -63,11 +64,11 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
     const colsToRender: TableColumn<User>[] = [
       {
         name: 'Role',
-        selector: user => user.role
+        cell: user => user.role
       },
       {
         name: 'Name',
-        selector: user => user.username
+        cell: user => user.username
       },
       {
         name: 'Facebook',
