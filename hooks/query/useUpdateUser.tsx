@@ -4,19 +4,19 @@ import { User } from '../../components/UI/UserTable';
 import { CollectionName } from '../../DB/models/collectionName';
 import { userAxios } from '../../utils/userAxios';
 
-const deleteUser = async (userId: string) => {
-  const response = await userAxios.delete(`/${userId}`);
-  return response;
+const updateUser = async (updatedUser: User) => {
+  const { data } = await userAxios.patch(`/${updatedUser._id}`, updatedUser);
+  return data.data as User;
 };
 
-const useDeleteUser = () => {
+const useUpdateUser = () => {
   const toast = useToast();
   const queryClient = useQueryClient();
-  const mutation = useMutation((user: User) => deleteUser(user._id), {
-    onSuccess: (_data, user) => {
+  const mutation = useMutation((updatedUser: User) => updateUser(updatedUser), {
+    onSuccess: updatedUser => {
       toast({
         status: 'success',
-        title: `${user.role} "${user.username}" deleted successfully.`
+        title: `${updatedUser.role} "${updatedUser.username}" updated successfully.`
       });
       queryClient.invalidateQueries(CollectionName.USER);
     }
@@ -24,4 +24,4 @@ const useDeleteUser = () => {
   return mutation;
 };
 
-export default useDeleteUser;
+export default useUpdateUser;

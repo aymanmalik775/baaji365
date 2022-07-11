@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
+import { UserTable, UserType } from '../../components/UI/UserTable';
 
 const AdminList: NextPage = () => {
-  return <div>Super agent List</div>;
+  return <UserTable userType={UserType.SuperAgent} isSuperPowerMode />;
 };
 
 export default AdminList;

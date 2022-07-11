@@ -1,11 +1,8 @@
 import type { NextPage } from 'next';
-import { UserType } from '../../components/UI/DataTableComponent';
-import { UserForm } from '../../components/UI/UserForm';
+import { UserTable, UserType } from '../../components/UI/UserTable';
 
 const AgentList: NextPage = () => (
-  <div>
-    <UserForm userRole={UserType.SuperAgent} />
-  </div>
+  <UserTable userType={UserType.Agent} isSuperPowerMode />
 );
 
 export default AgentList;

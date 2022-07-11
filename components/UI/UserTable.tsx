@@ -8,8 +8,12 @@ import {
   Text,
   useDisclosure
 } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
+import useCreateUser from '../../hooks/query/useCreateUser';
+import useDeleteUser from '../../hooks/query/useDeleteUser';
+import useGetUsers from '../../hooks/query/useGetUsers';
+import useUpdateUser from '../../hooks/query/useUpdateUser';
 import { UserForm } from './UserForm';
 
 export type User = {
@@ -32,35 +36,29 @@ export enum UserType {
 
 type Props = {
   userType: UserType;
-  data?: User[];
   isSuperPowerMode?: boolean;
-  isGettingUsers?: boolean;
-  onAddUser: (user: User) => void;
-  onEditUser: (user: User) => void;
-  onDeleteUser: (user: User) => void;
-  isCreatingUser: boolean;
-  isEditingUser: boolean;
 };
 
 const getRenderedList = (label: string, link: string) => (
-  <Link color="blue.600" href={`//${link}`} isExternal>
+  <Link
+    color="blue.600"
+    href={link.startsWith('http') ? link : `//${link}`}
+    isExternal
+  >
     {label}
   </Link>
 );
 
-export function DataTableComponent({
-  userType,
-  data,
-  isSuperPowerMode = true,
-  isGettingUsers,
-  isCreatingUser,
-  isEditingUser,
-  onAddUser,
-  onDeleteUser,
-  onEditUser
-}: Props) {
+export function UserTable({ userType, isSuperPowerMode = true }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [userToEdit, setUserToEdit] = useState<User>();
+  const { data: users, isLoading: isGettingUsers } = useGetUsers(userType);
+  const { isLoading: isCreatingUser, mutateAsync: createUser } =
+    useCreateUser();
+  const { mutateAsync: deleteUser, isLoading: isDeletingUser } =
+    useDeleteUser();
+  const { mutateAsync: updateUser, isLoading: isUpdatingUser } =
+    useUpdateUser();
 
   const columns = useMemo(() => {
     const colsToRender: TableColumn<User>[] = [
@@ -94,7 +92,7 @@ export function DataTableComponent({
           <>
             <IconButton
               onClick={() => {
-                onDeleteUser(user);
+                deleteUser(user);
               }}
               margin={1}
               colorScheme="red"
@@ -115,7 +113,7 @@ export function DataTableComponent({
       });
     }
     return colsToRender;
-  }, [isSuperPowerMode, onDeleteUser]);
+  }, [deleteUser, isSuperPowerMode]);
 
   return (
     <>
@@ -139,7 +137,7 @@ export function DataTableComponent({
         <DataTable
           pagination
           columns={columns}
-          data={data ?? []}
+          data={users ?? []}
           progressPending={isGettingUsers}
           progressComponent={
             <Spinner
@@ -161,12 +159,14 @@ export function DataTableComponent({
         onOpen={onOpen}
         userRole={userType}
         onCreateUser={user => {
-          onAddUser && onAddUser(user);
+          createUser(user);
+          onClose();
         }}
         onEditUser={user => {
-          onEditUser && onEditUser(user);
+          userToEdit && updateUser({ ...user, _id: userToEdit._id });
+          onClose();
         }}
-        isSubmitting={isCreatingUser || isEditingUser}
+        isSubmitting={isCreatingUser || isUpdatingUser}
         defaultUser={userToEdit}
       />
     </>

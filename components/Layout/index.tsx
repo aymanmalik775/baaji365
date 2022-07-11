@@ -1,5 +1,7 @@
+import { Box } from '@chakra-ui/react';
 import React from 'react';
-import Appbar from './Appbar';
+import Footer from './Footer';
+import Header from './Header';
 
 type Props = {
   children: React.ReactNode;
@@ -7,9 +9,10 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <>
-      <Appbar />
+    <Box height={'100vh'} display="flex" flexDirection={'column'}>
+      <Header />
       <main>{children}</main>
-    </>
+      <Footer />
+    </Box>
   );
 }

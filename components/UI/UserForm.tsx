@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { User, UserType } from './DataTableComponent';
+import { User, UserType } from './UserTable';
 import { FaWhatsapp, FaFacebook, FaLink } from 'react-icons/fa';
 
 export enum FormMode {

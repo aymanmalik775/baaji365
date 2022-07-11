@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { User } from '../../components/UI/DataTableComponent';
-import { CollectionName } from './collectionName';
+import { User } from '../../components/UI/UserTable';
+import { CollectionName, getTableName } from './collectionName';
 
 type UserWOId = Omit<User, '_id'>;
 export interface IUser extends UserWOId, Document {}
@@ -37,8 +37,7 @@ const userSchema = new mongoose.Schema<IUser>({
 });
 
 // OUR TODO MODEL
-const User =
-  mongoose.models.User ||
-  mongoose.model<IUser>(CollectionName.USER, userSchema);
+const table = getTableName(process.env.NODE_ENV, CollectionName.USER);
+const User = mongoose.models[table] || mongoose.model<IUser>(table, userSchema);
 
 export default User;

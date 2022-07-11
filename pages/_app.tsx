@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, ToastProvider } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import { useEffect, useState } from 'react';
 import { QueryClientProvider } from 'react-query';
@@ -18,9 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ToastProvider defaultOptions={{ duration: 3000, isClosable: true }}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ToastProvider>
       </QueryClientProvider>
     </ChakraProvider>
   );
