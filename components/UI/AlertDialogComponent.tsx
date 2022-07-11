@@ -59,7 +59,7 @@ const AlertDialogComponent = ({
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={onAgree} ml={3}>
-                {" I'm sure"}
+                {"I'm sure"}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

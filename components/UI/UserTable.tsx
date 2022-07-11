@@ -179,9 +179,11 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
         defaultUser={userToEdit}
       />
       <AlertDialogComponent
-        onClose={alertDialog.onClose}
+        onClose={() => {
+          setUserToDelete(undefined);
+        }}
         isOpen={alertDialog.isOpen}
-        title={`Delete ${userToDelete?.role} "${userToDelete?.username}"}`}
+        title={`Delete ${userToDelete?.role} "${userToDelete?.username}"`}
         onAgree={async () => {
           setUserToDelete(undefined);
           userToDelete && (await deleteUser(userToDelete));
