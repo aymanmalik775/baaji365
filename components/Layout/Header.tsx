@@ -1,7 +1,18 @@
 import React from 'react';
-import { Box, Flex, Text, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  Button,
+  Center,
+  Avatar,
+  IconButton,
+  Tooltip
+} from '@chakra-ui/react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { signIn, useSession, signOut } from 'next-auth/react';
+import { FaGoogle, FaSignOutAlt } from 'react-icons/fa';
 
 interface NavItem {
   label: string;
@@ -41,10 +52,9 @@ const MenuItems = ({ navItems }: MenuItemsProps) => {
   return <>{renderedContent}</>;
 };
 
-interface Props {}
-
-const Header = (props: Props) => {
+const Header = () => {
   const [show, setShow] = React.useState(false);
+  const { data: session } = useSession();
   const handleToggle = () => setShow(!show);
 
   return (
@@ -57,7 +67,6 @@ const Header = (props: Props) => {
         padding="1.5rem"
         bg="teal.500"
         color="white"
-        {...props}
       >
         <Flex align="center" mr={5}>
           <Link href="/">
@@ -96,9 +105,42 @@ const Header = (props: Props) => {
           display={{ base: show ? 'block' : 'none', md: 'block' }}
           mt={{ base: 4, md: 0 }}
         >
-          <Button colorScheme={'teal'} border="1px">
-            Super Power 🪄
-          </Button>
+          {session?.user ? (
+            <Box display={'flex'}>
+              <Center>
+                <Avatar
+                  name={session.user.name ?? ''}
+                  src={session.user.image ?? ''}
+                  marginRight={2}
+                  size="sm"
+                />
+                <Text textTransform={'uppercase'} fontWeight={'bold'}>
+                  Hi, {session.user.name}
+                </Text>
+                <Tooltip label="Sign Out">
+                  <IconButton
+                    size={'sm'}
+                    onClick={() => signOut()}
+                    mx={2}
+                    colorScheme="red"
+                    aria-label="Search database"
+                    icon={<FaSignOutAlt />}
+                  />
+                </Tooltip>
+              </Center>
+            </Box>
+          ) : (
+            <Button
+              onClick={() => signIn('google')}
+              variant={'solid'}
+              colorScheme="whiteAlpha"
+              leftIcon={<FaGoogle />}
+            >
+              <Center>
+                <Text>Sign in with Google</Text>
+              </Center>
+            </Button>
+          )}
         </Box>
       </Flex>
     </>

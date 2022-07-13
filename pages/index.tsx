@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import {
   Box,
@@ -15,6 +15,7 @@ import {
 import Link from 'next/link';
 import { usePrefetchUsers } from '../hooks/query/useGetUsers';
 import { useEffect } from 'react';
+
 export const primaryColor = '#2F855A';
 
 const Home: NextPage = () => {
@@ -27,7 +28,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Baaji365 BD</title>
+        <title>Baaji365 Official Bangladesh</title>
         <meta name="baaji365" content="baaji365_winpku_winpbu_velki" />
       </Head>
 
@@ -48,6 +49,7 @@ const Home: NextPage = () => {
               online betting
             </Text>
           </Heading>
+
           <Text color={'gray.500'}>
             This is the official website for all Bangladeshi Baaji365 users.
           </Text>

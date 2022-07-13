@@ -7,6 +7,7 @@ import {
   Spinner,
   useDisclosure
 } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useMemo, useState } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import useCreateUser from '../../hooks/query/useCreateUser';
@@ -36,7 +37,6 @@ export enum UserType {
 
 type Props = {
   userType: UserType;
-  isSuperPowerMode?: boolean;
 };
 
 const getRenderedList = (label: string, link: string) => (
@@ -49,7 +49,7 @@ const getRenderedList = (label: string, link: string) => (
   </Link>
 );
 
-export function UserTable({ userType, isSuperPowerMode = true }: Props) {
+export function UserTable({ userType }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const alertDialog = useDisclosure();
   const [userToEdit, setUserToEdit] = useState<User>();
@@ -61,6 +61,8 @@ export function UserTable({ userType, isSuperPowerMode = true }: Props) {
     useDeleteUser();
   const { mutateAsync: updateUser, isLoading: isUpdatingUser } =
     useUpdateUser();
+  const { data: session, status } = useSession();
+  const isSuperPowerMode = status === 'authenticated';
 
   const columns = useMemo(() => {
     const colsToRender: TableColumn<User>[] = [
