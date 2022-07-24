@@ -129,7 +129,7 @@ export function UserForm({
                   </FormLabel>
                   <Input
                     id="username"
-                    placeholder={`Please enter ${String(
+                    placeholder={`Enter ${String(
                       userRole
                     ).toLowerCase()} name`}
                     {...register('username', {
