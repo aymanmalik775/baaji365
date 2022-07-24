@@ -1,9 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { unstable_getServerSession } from 'next-auth/next';
 import { ResponseFuncs } from '.';
 import { connectToDB } from '../../../DB/conntection';
 import User, { IUser } from '../../../DB/models/UserSchema';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await unstable_getServerSession(req, res, nextAuthOptions);
+  if (!session) {
+    res.status(401).json('You are not allowed to perform this action.');
+  }
   await connectToDB();
 
   const method: keyof ResponseFuncs = req.method as keyof ResponseFuncs;
@@ -20,9 +26,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     },
     PATCH: async (req: NextApiRequest, res: NextApiResponse) => {
-      const user: IUser = await User.findByIdAndUpdate(userId, req.body).catch(
-        catcher
-      );
+      const user: IUser = await User.findByIdAndUpdate(userId, req.body, {
+        new: true
+      }).catch(catcher);
       return res.status(200).json({
         status: 'success',
         data: user

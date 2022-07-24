@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { unstable_getServerSession } from 'next-auth/next';
 import { UserType } from '../../../components/UI/UserTable';
 import { connectToDB } from '../../../DB/conntection';
 import User, { IUser } from '../../../DB/models/UserSchema';
+import { nextAuthOptions } from '../auth/[...nextauth]';
 
 export interface ResponseFuncs {
   GET?: Function;
@@ -10,6 +12,8 @@ export interface ResponseFuncs {
   DELETE?: Function;
 }
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await unstable_getServerSession(req, res, nextAuthOptions);
+
   await connectToDB();
 
   const method: keyof ResponseFuncs = req.method as keyof ResponseFuncs;
@@ -29,6 +33,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     },
     POST: async (req: NextApiRequest, res: NextApiResponse) => {
+      if (!session) {
+        res.status(401).json('You are not allowed to perform this action.');
+      }
       const user: IUser = await User.create(req.body).catch(catcher);
       return res.status(200).json({
         status: 'success',

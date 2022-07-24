@@ -74,16 +74,6 @@ export function UserForm({
     formMode === FormMode.Create ? onCreateUser(final) : onEditUser(final);
   };
 
-  // reset({
-  //   username: '',
-  //   role: userRole,
-  //   fbLink: '',
-  //   fbName: '',
-  //   whatsappNumber: '',
-  //   complainToUserIdLink: '',
-  //   complainToUserName: ''
-  // })
-
   useEffect(() => {
     if (defaultUser) {
       reset({
@@ -115,6 +105,7 @@ export function UserForm({
                     Role
                   </FormLabel>
                   <Select
+                    defaultValue={userRole}
                     id="role"
                     isReadOnly={formMode !== FormMode.Edit}
                     pointerEvents={formMode !== FormMode.Edit ? 'none' : 'auto'}
